@@ -1,0 +1,16 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "article api",
+  "main": "index.js",
+  "author": "Victor Santos",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "eslint": "^8.6.0",
+    "express": "^4.17.2",
+    "jest": "^27.4.6",
+    "mogoose": "^0.0.1-security",
+    "typescript": "^4.5.4"
+  }
+}
