@@ -1,18 +1,18 @@
 const mongose = require('mongoose')
 
-const Article = mongose.model('Artigo', {
-    title: {
+const Administrador = mongose.model('administrador', {
+    name: {
         type: String,
         require: true
     },
-    subtitle: {
+    email: {
         type: String,
         require: true
     },
-    text: {
+    password: {
         type: String,
         require: true
     }
 })
 
-module.exports = Article
+module.exports = Administrador

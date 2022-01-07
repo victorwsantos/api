@@ -1,5 +1,5 @@
 export default{
-    port: 3008,
+    port: 3003,
     host: "localhost",
-    dbUri: "mongodb://localhost/rest-api",
+    dbUrl: "mongodb://localhost/portfolio",
 }

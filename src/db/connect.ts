@@ -2,20 +2,15 @@ import mongoose from 'mongoose'
 import log from '../logger'
 import config from 'config'
 
+
 function connect(){
-    
-    const dbUri = config.get("dbUri") as string
-    log.info(dbUri)
-    
-    return mongoose
-    .connect(dbUri).then(() => {
+    const dbUrl = config.get('dbUrl') as string
 
-        log.info('Mongo Conectado')
-
-    }).catch((err) => {
-        
-        log.info('Erro ao conectar '+ err)
-        process.exit(1)
+    return mongoose.connect(dbUrl).then( () => {
+        log.info('Servidor Conectado')
+    
+    }).catch( (err) =>{
+        log.info('Erro ao se Conectar '+ err)
     })
 }
 export default connect
