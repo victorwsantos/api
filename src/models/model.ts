@@ -1,18 +1,14 @@
 const mongose = require('mongoose')
 
 const Administrador = mongose.model('administrador', {
-    name: {
+    tittle: {
         type: String,
         require: true
     },
-    email: {
-        type: String,
-        require: true
-    },
-    password: {
+    text: {
         type: String,
         require: true
     }
 })
 
-module.exports = Administrador
+export default Administrador
