@@ -8,6 +8,7 @@ const cors_1 = __importDefault(require("cors"));
 const model_1 = __importDefault(require("../models/model"));
 const db_1 = __importDefault(require("../db/db"));
 const routes_1 = require("../routes/routes");
+const UserRoute_1 = require("../routes/UserRoute");
 class Service {
     constructor() {
         this.connect = model_1.default;
@@ -19,6 +20,7 @@ class Service {
         this.app.use((0, cors_1.default)());
         this.app.use(express_1.default.json());
         this.app.use(express_1.default.urlencoded({ extended: false }));
+        this.userRoutes = new UserRoute_1.UserRoute(this.app);
         this.routes = new routes_1.Route(this.app);
     }
 }

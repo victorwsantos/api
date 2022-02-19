@@ -1,7 +1,6 @@
-const mongoose = require('mongoose')
+const mongose = require('mongoose')
 
-
-const AuthModel = mongoose.model('users', {
+const authModel = mongose.model('users', {
   name: {
     type: String,
     require: true
@@ -19,3 +18,5 @@ const AuthModel = mongoose.model('users', {
     require: true
   }
 })
+
+export default authModel

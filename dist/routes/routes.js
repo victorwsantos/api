@@ -45,9 +45,6 @@ class Route {
                 res.send(402).json({ message: error });
             }
         }));
-        this.app.get('/auth', (req, res) => {
-            res.send('Olá Auth');
-        });
     }
     routerPost() {
         this.app.post('/add-article', (req, res) => __awaiter(this, void 0, void 0, function* () {

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import Administrador from '../models/model'
-import app from '../service'
+import { jwtConfig } from '../service/auth'
 
 export class Route {
   app
@@ -37,10 +37,8 @@ export class Route {
         res.send(402).json({ message: error })
       }
     })
-    this.app.get('/auth', (req: Request, res: Response) => {
-      res.send('Olá Auth')
-    })
   }
+
 
   routerPost() {
     this.app.post('/add-article', async (req: Request, res: Response): Promise<any> => {
@@ -60,6 +58,7 @@ export class Route {
       }
 
     })
+
   }
 
   routeUpdate() {
