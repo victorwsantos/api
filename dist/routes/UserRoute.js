@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRoute = void 0;
 const userModel_1 = __importDefault(require("../models/userModel"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class UserRoute {
     constructor(app) {
         this.app = app;
@@ -46,6 +47,21 @@ class UserRoute {
             }
             catch (error) {
                 res.send(error);
+            }
+        }));
+        this.app.post('/auth', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { email } = req.body;
+            console.log(email);
+            const findUser = yield userModel_1.default.findOne({ email: email });
+            const secret = 'process.env.SECRET';
+            try {
+                const token = jsonwebtoken_1.default.sign({ user: findUser.email }, secret);
+                res.send({ msg: 'logado', token });
+                console.log(token);
+            }
+            catch (error) {
+                res.sendStatus(401);
+                console.log('error');
             }
         }));
     }

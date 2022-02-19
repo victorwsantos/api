@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import Administrador from '../models/model'
-import { jwtConfig } from '../service/auth'
 
 export class Route {
   app
