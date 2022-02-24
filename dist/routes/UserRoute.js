@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -14,33 +33,66 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRoute = void 0;
 const userModel_1 = __importDefault(require("../models/userModel"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const jwt = __importStar(require("../config/jwt"));
 class UserRoute {
     constructor(app) {
+        this.authMiddler = (req, res, next) => {
+            const authHeader = req.headers['authorization'];
+            const token = authHeader && authHeader.split(' ')[1];
+            if (!token) {
+                return res.status(401).json({ msg: 'Acesso Negado' });
+            }
+            try {
+                jwt.verify(token);
+                next();
+            }
+            catch (error) {
+                res.status(400)
+                    .json({ msg: 'Invalide Access' });
+            }
+        };
         this.app = app;
         this.createUserRoute();
         this.findUsers();
+        this.routeDelete();
+        this.signIn();
     }
     createUserRoute() {
-        this.app.post('/route', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const { name, age, email, password } = req.body;
+        this.app.post('/add-user', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { name, age, email, password, } = req.body;
             const user = {
                 name,
                 age,
                 email,
-                password
+                password,
             };
             try {
-                const newUser = yield userModel_1.default.create(user);
-                res.status(200).json({ message: 'usuario criado com sucesso' });
+                yield userModel_1.default.create(user);
+                res.send({ user: user });
             }
             catch (error) {
-                res.send(error);
+                res.status(400).json({ err: error });
+            }
+        }));
+    }
+    signIn() {
+        this.app.get('/auth/login', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { email, password } = req.body;
+            try {
+                const user = yield userModel_1.default.findOne({ email: email, password: password });
+                const token = jwt.sing({ user: user.email });
+                if (!email && !password) {
+                    res.sendStatus(404).json('user not found');
+                }
+                res.send({ user: user, token });
+            }
+            catch (error) {
+                res.sendStatus(404).json({ msg: 'user not found' });
             }
         }));
     }
     findUsers() {
-        this.app.get('/users', (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.app.get('/users', this.authMiddler, (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const findUser = yield userModel_1.default.find();
                 res.send(findUser);
@@ -49,19 +101,19 @@ class UserRoute {
                 res.send(error);
             }
         }));
-        this.app.post('/auth', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const { email } = req.body;
-            console.log(email);
-            const findUser = yield userModel_1.default.findOne({ email: email });
-            const secret = 'process.env.SECRET';
+        this.app.get('/auth', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            res.send('rota');
+        }));
+    }
+    routeDelete() {
+        this.app.delete('/delete/:name', (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const name = req.params.name;
+            userModel_1.default.findOne({ name: name });
             try {
-                const token = jsonwebtoken_1.default.sign({ user: findUser.email }, secret);
-                res.send({ msg: 'logado', token });
-                console.log(token);
+                yield userModel_1.default.deleteMany({ name: name }).then(() => { res.sendStatus(200).json({ message: 'apagou tudo' }); });
             }
             catch (error) {
-                res.sendStatus(401);
-                console.log('error');
+                res.sendStatus(200).json({ message: 'rota errada' });
             }
         }));
     }

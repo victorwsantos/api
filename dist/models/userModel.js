@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongose = require('mongoose');
+const crypto = require('crypto');
 const authModel = mongose.model('users', {
     name: {
         type: String,
@@ -12,11 +13,11 @@ const authModel = mongose.model('users', {
     },
     email: {
         type: String,
-        require: true
+        require: true,
     },
     password: {
         type: String,
-        require: true
+        require: true,
     }
 });
 exports.default = authModel;

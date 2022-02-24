@@ -1,4 +1,5 @@
 const mongose = require('mongoose')
+const crypto = require('crypto')
 
 const authModel = mongose.model('users', {
   name: {
@@ -11,11 +12,11 @@ const authModel = mongose.model('users', {
   },
   email: {
     type: String,
-    require: true
+    require: true,
   },
   password: {
     type: String,
-    require: true
+    require: true,
   }
 })
 
